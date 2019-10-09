@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
 const linkStyle = {
-  marginRight: 15,
+  marginRight: 10,
+  marginLeft: 10,
   color: "black",
 };
 
