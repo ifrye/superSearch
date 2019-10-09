@@ -11,12 +11,15 @@ const Header = () => (
     <Link href="/">
       <a style={linkStyle}>Home</a>
     </Link>
-    <Link href="/about">
-      <a style={linkStyle}>About</a>
-    </Link>
+    
     <Link href="/search">
       <a style={linkStyle}>Find a Campground</a>
     </Link>
+
+    <Link href="/about">
+      <a style={linkStyle}>About</a>
+    </Link>
+  
   </div>
 );
 
