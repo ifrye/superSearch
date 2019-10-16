@@ -42,6 +42,11 @@ class Home extends React.Component {
 
               </div> : null}
 
+              {"user" in this.state && this.state.user == null ? <div>
+                <p>{this.state.search} Not Found</p>
+              </div> : null}
+
+
         <style jsx>{`
           h1,
           h2,
