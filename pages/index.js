@@ -14,15 +14,11 @@ class Home extends React.Component {
             
             <Header />
             
-            <h1>Campgrounds</h1>
+            <h1>Super Search</h1>
            
-            <img src="/static/westlake-campground.png" style={{height:400,width:500}} />
+            <img src="/static/search.jpg" style={{height:400,width:500}} />
         
-            <p>Sometimes spending a day in the wilderness isn't quite enough to truly capture the feeling of a special place. 
-            Sure you see some amazing views or go on an unforgettable hike.  But to get the full experience, you yearn to see 
-            the dark, starry skies.  To listen to the Yips of coyotes. To watch the sun rise on a silent, dewy morning.  
-            Camping in the great outdoors transforms a regular old road trip into an epic experience. So pack up your tent or 
-            hitch up the fifth wheel -- adventure awaits!</p>
+            <p>Search For Information About Your Local Community</p>
         
           </body>
 
@@ -33,7 +29,7 @@ class Home extends React.Component {
           p {
             font-family: "Arial";
             textAlign: center;
-            color: green;
+            color: black;
           }
 
           .description {

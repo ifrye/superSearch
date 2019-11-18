@@ -13,11 +13,11 @@ const Header = () => (
     </Link>
     
     <Link href="/search">
-      <a style={linkStyle}>Find a Campground</a>
+      <a style={linkStyle}>Search</a>
     </Link>
 
-    <Link href="/about">
-      <a style={linkStyle}>About</a>
+    <Link href="/login">
+      <a style={linkStyle}>Login</a>
     </Link>
   
   </div>

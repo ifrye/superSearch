@@ -8,14 +8,12 @@ class Home extends React.Component {
     this.state={search: ""};
   }
 
-  handleUpdate(evt){
+  async handleSearch(evt){
     this.setState({search: evt.target.value});
+    const item = await getInfo(evt.target.value);
+    this.setState({item});
   }
 
-  async handleSearch(evt){
-    const user = await getInfo(this.state.search);
-    this.setState({user});
-  }
 
   render() {
     return (
@@ -24,73 +22,122 @@ class Home extends React.Component {
             
             <Header />
             
-            <h1>New Mexico Campground Search</h1>
+            <h2>Super Search</h2>
 
-            <p><input type='text' value={this.state.search} onChange={this.handleUpdate.bind(this)}/></p>
-            <div style={{ textAlign:"center", marginBottom: "10px" }} className="button-style" onClick={this.handleSearch.bind(this)}>Submit</div>
+              <p><input placeholder = 'search...' type='text' value={this.state.search} onChange={this.handleSearch.bind(this)}/></p>
+                  
+                  {'item' in this.state && this.state.search != '' && this.state.item.type == 'movies' ? <div>
+                      <br />
+                      <table>
+                        <tbody>
+                          {this.state.item.results.map((thing, key) =>
+                              <tr>
+                                  <td>{thing.movie}</td>
+                                  <td>{thing.theater}</td>
+                                  <td>{thing.address}</td>
+                                  <td>{thing.city}</td>
+                                  <td>{thing.zip}</td>
+                              </tr>
+                            )}
+                          
+                        </tbody>
+                      </table>
 
-            {this.state.user ? <div>
-                <br />
-                <h3>{this.state.user.name}</h3>
 
-                <img style={{maxWidth: '800px', maxHeight: '800px'}}
-                  src= {this.state.user.image_url} /> <br />
+                  </div> : null}
 
-                  <h3>{this.state.user.closest_town}</h3>
+                  {'item' in this.state && this.state.search != '' && this.state.item.type == 'stores' ? <div>
+                    <br />
+                      <table>
+                        <tbody>
+                          {this.state.item.results.map((thing, key) =>
+                            <tr>
+                              <td>{thing.name}</td>
+                              <td>{thing.typename}</td>
+                              <td>{thing.address}</td>
+                              <td>{thing.city}</td>
+                              <td>{thing.zip}</td>
+                            </tr>
+                            )}
+                          
+                        </tbody>
+                      </table>
+                    </div> : null}
 
-                  <p>{this.state.user.description}</p>
 
-              </div> : null}
-
-              {"user" in this.state && this.state.user == null ? <div>
-                <p>{this.state.search} Not Found</p>
-              </div> : null}
+              
 
 
-        <style jsx>{`
-          h1,
-          h2,
-          a{
-            font-family: "Arial";
-            textAlign: center;
-            color: green;
-          }
+              <style jsx>{`
+                  h1{
+                    color:black; 
+                    font-family: "Arial";
+                    margin: "auto auto"; 
+                    width: 100%;
+                    display: inline; 
+                    textAlign: "center";
+                    padding: "0 px";
+                  }
 
-          .h3{
-            font-family: "Arial";
-            textAlign: center;
-            color: black;
-          }
+                  h2,
+                  a{
+                    font-family: "Arial";
+                    textAlign: "center";
+                    color: black;
+                    margin:"auto auto";
+                    padding:"9px";
+                  }
 
-          .p{
-            font-family: "Arial";
-            textAlign: center;
-            color: black;
-          }
+                  .h3{
+                    font-family: "Arial";
+                    textAlign: center;
+                    color: black;
+                  }
 
-          .button-style{
-            margin: auto auto;
-            cursor: pointer;
-            background-color: green;
-            color: #ffffff;
-            width: 100px;
-            font-family: "Arial";
-          }
+                  .p{
+                    font-family: "Arial";
+                    textAlign: center;
+                    color: black;
+                  }
 
-          .description {
-            font-family: "Arial";
-            font-size: "10px";
-          }
-          
-          a {
-            text-decoration: underline;
-            color: green;
-          }
+                  .button-style{
+                    margin: auto auto;
+                    cursor: pointer;
+                    background-color: green;
+                    color: #ffffff;
+                    width: 100px;
+                    font-family: "Arial";
+                  }
 
-          a:hover {
-            opacity: 0.6;
-          }
-        `}</style>
+                  .description {
+                    font-family: "Arial";
+                    font-size: "10px";
+                  }
+                  
+                  a {
+                    text-decoration: underline;
+                    color: green;
+                  }
+
+                  a:hover {
+                    opacity: 0.6;
+                  }
+                  table {
+                    font-family: arial, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                  }
+
+                  td, th {
+                    border: 1px solid #ffffff;
+                    text-align: left;
+                    padding: 8px;
+                  }
+
+                  tr:nth-child(even) {
+                    background-color: #dddddd;
+                  }
+              `}</style>
       </div>
     );
   }
