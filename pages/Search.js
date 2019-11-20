@@ -24,7 +24,7 @@ class Home extends React.Component {
             
             <h2>Super Search</h2>
 
-              <p><input placeholder = 'search...'type='text' value={this.state.search} onChange={this.handleSearch.bind(this)}/></p>
+              <p><input placeholder = 'search...' type='text' value={this.state.search} onChange={this.handleSearch.bind(this)}/></p>
                   
                   {'item' in this.state && this.state.search != '' && this.state.item.type == 'movies' ? <div>
                       <br />

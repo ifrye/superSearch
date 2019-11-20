@@ -26,6 +26,7 @@ class Home extends React.Component {
       password: this.state.password,
       zip: this.state.zip
     });
+    console.log("createUser = " + createUser);
     this.setState({createUser});
   }
 
@@ -44,7 +45,7 @@ class Home extends React.Component {
             <button onClick={this.handleCreate.bind(this)}>Submit</button>
 
             {'createUser' in this.state ? <div>
-            <p>You are registered!</p>
+            <p>{this.state.createUser.status}</p>
             </div>: null}
 
               <style jsx>{`
@@ -67,16 +68,16 @@ class Home extends React.Component {
                     padding:"9px";
                   }
 
-                  .h3{
+                  h3{
                     font-family: "Arial";
                     textAlign: center;
                     color: black;
                   }
 
-                  .p{
+                  p{
                     font-family: "Arial";
                     textAlign: center;
-                    color: black;
+                    color: red;
                   }
 
                   .button-style{

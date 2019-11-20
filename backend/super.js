@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const argon = require("argon2");
 
+
 const cors = require("cors");
 
 const app = express();
@@ -54,27 +55,51 @@ app.post("/api/login", async(req, res) =>{
 app.get("/api", async (req, res) => {
 	try {
 		let type;
-		if (req.query.q == "movies" || req.query.q == "Movies"){
-			const template = "SELECT movie, theater, address, city, zip FROM movies";
-			const response = await pool.query(template);	
-			res.json({type: 'movies', results: response.rows});
-		}
-		else {
-			const template = "SELECT movie, theater, address, city, zip FROM movies WHERE movie ilike $1";
-			const response = await pool.query(template,[`%${req.query.q}%`]);
-			if(response.rowCount == 0){
-				type = 'stores';
-				const template2 = "SELECT DISTINCT stores.name, types.typeName, stores.address, stores.city, stores.zip FROM stores join types on stores.storeID = types.storeID WHERE stores.name ilike $1 OR types.typeName ilike $1 ORDER BY stores.name;";
-				const response2 = await pool.query(template2,[`%${req.query.q}%`]);
-				res.json({type: 'stores', results: response2.rows});
-			}else{
-				type = 'movies';
+		const zipCode = req.query.zip;
+		console.log("zip is " + zipCode);
+		if(zipCode === 'undefined'){
+			if (req.query.q == "movies" || req.query.q == "Movies"){
+				const template = "SELECT movie, theater, address, city, zip FROM movies";
+				const response = await pool.query(template);
 				res.json({type: 'movies', results: response.rows});
 			}
-			
+			else {//add Zip to all these selects
+				const template = "SELECT movie, theater, address, city, zip FROM movies WHERE movie ilike $1";
+				const response = await pool.query(template,[`%${req.query.q}%`]);
+				if(response.rowCount == 0){
+					type = 'stores';
+					const template2 = "SELECT DISTINCT stores.name, types.typeName, stores.address, stores.city, stores.zip FROM stores join types on stores.storeID = types.storeID WHERE stores.name ilike $1 OR types.typeName ilike $1 ORDER BY stores.name;";
+					const response2 = await pool.query(template2,[`%${req.query.q}%`]);
+					res.json({type: 'stores', results: response2.rows});
+				}else{
+					type = 'movies';
+					res.json({type: 'movies', results: response.rows});
+				}
+			}
+		}
+		else{//do regular statements without zip
+			if (req.query.q == "movies" || req.query.q == "Movies"){
+				const template = "SELECT movie, theater, address, city, zip FROM movies WHERE zip = $1";
+				const response = await pool.query(template, [zipCode]);
+				res.json({type: 'movies', results: response.rows});
+			}
+			else {//add Zip to all these selects
+				const template = "SELECT movie, theater, address, city, zip FROM movies WHERE movie ilike $1 AND zip = $2";
+				const response = await pool.query(template,[`%${req.query.q}%`, zipCode]);
+				if(response.rowCount == 0){
+					type = 'stores';
+					const template2 = "SELECT DISTINCT stores.name, types.typeName, stores.address, stores.city, stores.zip FROM stores join types on stores.storeID = types.storeID WHERE (stores.name ilike $1 OR types.typeName ilike $1) AND (stores.zip = $2) ORDER BY stores.name;";
+					const response2 = await pool.query(template2,[`%${req.query.q}%`, zipCode]);
+					res.json({type: 'stores', results: response2.rows});
+				}else{
+					type = 'movies';
+					res.json({type: 'movies', results: response.rows});
+				}
+				
+			}
 		}
 	}catch(err){
-		console.log("in catch of /list-users" + err);
+		console.log("in catch of search" + err.stack);
 	}
 
 });
@@ -100,10 +125,10 @@ app.post("/api/create-user", async (req, res) =>{
 				hash,
 				zip
 			]);
-			res.json({ "status": "user added"});
+			res.json({ "status": "You are registered!"});
 		}
 		else{
-			res.json({"status": "username already exists"});
+			res.json({"status": "Username already exists"});
 		}
 	}catch(err){
 		console.log("In catch of /create-user" + err);

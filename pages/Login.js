@@ -46,6 +46,10 @@ class Home extends React.Component {
             <p><input placeholder = 'password' type='password' value={this.state.password} onChange={this.handlePassword.bind(this)}/></p>
             <button onClick={this.handleLogin.bind(this)}>Submit</button>
 
+            {'loggedInUser' in this.state ? <div>
+                <p>{this.state.loggedInUser.status}</p>
+            </div>: null}
+
               <style jsx>{`
                   h1{
                     color:black; 
@@ -66,16 +70,16 @@ class Home extends React.Component {
                     padding:"9px";
                   }
 
-                  .h3{
+                  h3{
                     font-family: "Arial";
                     textAlign: center;
                     color: black;
                   }
 
-                  .p{
+                  p{
                     font-family: "Arial";
                     textAlign: center;
-                    color: black;
+                    color: red;
                   }
 
                   .button-style{
