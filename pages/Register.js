@@ -1,19 +1,33 @@
 import React from "react";
 import Header from '../components/Header';
-import {getInfo} from '../lib/utils.js'
+import {getCreate} from '../lib/utils.js'
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.state={search: ""};
+    this.state={username: "", password: "", zip: "", loggedin: ""};
   }
 
-  async handleSearch(evt){
-    this.setState({search: evt.target.value});
-    const item = await getInfo(evt.target.value);
-    this.setState({item});
+  async handleUsername(evt){
+        this.setState({username: evt.target.value});
   }
 
+  async handlePassword(evt){
+        this.setState({password: evt.target.value});
+  }
+
+  async handleZip(evt){
+        this.setState({zip: evt.target.value});
+  }
+
+  async handleCreate(evt){
+    const createUser = await getCreate({
+      username: this.state.username,
+      password: this.state.password,
+      zip: this.state.zip
+    });
+    this.setState({createUser});
+  }
 
   render() {
     return (
@@ -22,51 +36,16 @@ class Home extends React.Component {
             
             <Header />
             
-            <h2>Super Search</h2>
+            <h2>Register</h2>
 
-              <p><input placeholder = 'search...'type='text' value={this.state.search} onChange={this.handleSearch.bind(this)}/></p>
-                  
-                  {'item' in this.state && this.state.search != '' && this.state.item.type == 'movies' ? <div>
-                      <br />
-                      <table>
-                        <tbody>
-                          {this.state.item.results.map((thing, key) =>
-                              <tr>
-                                  <td>{thing.movie}</td>
-                                  <td>{thing.theater}</td>
-                                  <td>{thing.address}</td>
-                                  <td>{thing.city}</td>
-                                  <td>{thing.zip}</td>
-                              </tr>
-                            )}
-                          
-                        </tbody>
-                      </table>
+            <p><input placeholder = 'username' type='text' value={this.state.username} onChange={this.handleUsername.bind(this)}/></p>
+            <p><input placeholder = 'password' type='password' value={this.state.password} onChange={this.handlePassword.bind(this)}/></p>
+            <p><input placeholder = 'zip code' type='text' value={this.state.zip} onChange={this.handleZip.bind(this)}/></p>
+            <button onClick={this.handleCreate.bind(this)}>Submit</button>
 
-
-                  </div> : null}
-
-                  {'item' in this.state && this.state.search != '' && this.state.item.type == 'stores' ? <div>
-                    <br />
-                      <table>
-                        <tbody>
-                          {this.state.item.results.map((thing, key) =>
-                            <tr>
-                              <td>{thing.name}</td>
-                              <td>{thing.typename}</td>
-                              <td>{thing.address}</td>
-                              <td>{thing.city}</td>
-                              <td>{thing.zip}</td>
-                            </tr>
-                            )}
-                          
-                        </tbody>
-                      </table>
-                    </div> : null}
-
-
-              
-
+            {'createUser' in this.state ? <div>
+            <p>You are registered!</p>
+            </div>: null}
 
               <style jsx>{`
                   h1{

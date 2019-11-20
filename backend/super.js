@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const argon = require("argon2");
 
 const cors = require("cors");
 
@@ -27,6 +28,27 @@ app.get("/hello", (req, res) => {
 	res.json("Hello World");
 });
 
+app.post("/api/login", async(req, res) =>{
+	const username = req.body.username;
+	const password = req.body.password;
+	try{
+		const template = "SELECT password, zip from users where username = $1";
+		const response = await pool.query(template, [username]);
+		if(response.rowCount == 1){
+			if(await argon.verify(response.rows[0].password, password)){
+				const zip = response.rows[0].zip;
+				console.log(username + " " + zip);
+				res.json({"status" : "success", "username" : username, "zip" : zip});
+			}else{
+				res.json({"status" : "Password incorrect"});
+			}
+		}else{
+			res.json({"status" : "Username not found"});
+		}
+	}catch (err){
+		console.log("in catch of /api/login" + err);
+	}
+});
 
 //GET list of users
 app.get("/api", async (req, res) => {
@@ -57,36 +79,37 @@ app.get("/api", async (req, res) => {
 
 });
 
-/*
+
 //POST creating a user
-app.post("/create-user", async (req, res) =>{
+app.post("/api/create-user", async (req, res) =>{
+	console.log("in create user backend");
 	const username = req.body.username;
-	const firstname = req.body.firstname;
-	const lastname = req.body.lastname;
-	const email = req.body.email;
+	const password = req.body.password;
+	const zip = req.body.zip;
+	let hash;
 
 	try{
+		hash = await argon.hash(password);
 		const template = "SELECT username FROM users WHERE username = $1;"; 
 		const response = await pool.query(template, [username]);
 
 		if (response.rowCount == 0){
-			const template = "INSERT INTO users (username, firstname, lastname, email) values ($1, $2, $3, $4)";
+			const template = "INSERT INTO users (username, password, zip) values ($1, $2, $3)";
 			const response = await pool.query(template, [
 				username,
-				firstname,
-				lastname,
-				email
+				hash,
+				zip
 			]);
 			res.json({ "status": "user added"});
 		}
 		else{
-			res.json({"status": "username taken"});
+			res.json({"status": "username already exists"});
 		}
 	}catch(err){
 		console.log("In catch of /create-user" + err);
 	}
 });
-*/
+
 
 app.listen(app.get("port"), () => {
 	console.log(`Find the server at http://localhost:${app.get("port")}`);

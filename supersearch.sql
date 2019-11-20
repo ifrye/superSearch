@@ -130,6 +130,16 @@ INSERT INTO types (storeID, typeName) VALUES
 (25,'coffee'),
 (25,'breakfast');
 
+
+CREATE TABLE users(
+	userID SERIAL PRIMARY KEY,
+	username TEXT UNIQUE,
+	password TEXT,
+	zip INTEGER
+);
+
 GRANT SELECT, INSERT ON movies TO super;
 GRANT SELECT, INSERT ON stores TO super;
 GRANT SELECT, INSERT ON types TO super;
+GRANT SELECT, INSERT ON users TO super;
+GRANT USAGE on users_userid_seq TO super;

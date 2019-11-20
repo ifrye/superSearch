@@ -1,5 +1,8 @@
 import React from "react";
+import Router from "next/router";
+import jsCookie from "js-cookie";
 import Header from '../components/Header';
+import {getLogin} from '../lib/utils.js';
 
 class Home extends React.Component {
   constructor(props) {
@@ -8,11 +11,26 @@ class Home extends React.Component {
   }
 
   async handleUsername(evt){
-    this.setState({username: evt.target.value});
+        this.setState({username: evt.target.value});
   }
 
   async handlePassword(evt){
-    this.setState({password: evt.target.value});
+        this.setState({password: evt.target.value});
+  }
+
+  async handleLogin(){
+    const loggedInUser = await getLogin({
+      username: this.state.username,
+      password: this.state.password
+    });
+    console.log(loggedInUser.status);
+    if(loggedInUser.status == "success"){
+      console.log(loggedInUser.username);
+      jsCookie.set("username", loggedInUser.username);
+      jsCookie.set("zip", loggedInUser.zip);
+      Router.replace("/search");
+    }
+    this.setState({loggedInUser});
   }
 
   render() {
@@ -26,7 +44,8 @@ class Home extends React.Component {
 
             <p><input placeholder = 'username' type='text' value={this.state.username} onChange={this.handleUsername.bind(this)}/></p>
             <p><input placeholder = 'password' type='password' value={this.state.password} onChange={this.handlePassword.bind(this)}/></p>
-            <button>Submit</button>
+            <button onClick={this.handleLogin.bind(this)}>Submit</button>
+
               <style jsx>{`
                   h1{
                     color:black; 
