@@ -57,13 +57,15 @@ app.get("/api", async (req, res) => {
 		let type;
 		const zipCode = req.query.zip;
 		console.log("zip is " + zipCode);
-		if(zipCode === 'undefined'){
+		if(zipCode === undefined || zipCode === "undefined"){
 			if (req.query.q == "movies" || req.query.q == "Movies"){
+				console.log("In the if");
 				const template = "SELECT movie, theater, address, city, zip FROM movies";
 				const response = await pool.query(template);
 				res.json({type: 'movies', results: response.rows});
 			}
 			else {//add Zip to all these selects
+				console.log("in first else");
 				const template = "SELECT movie, theater, address, city, zip FROM movies WHERE movie ilike $1";
 				const response = await pool.query(template,[`%${req.query.q}%`]);
 				if(response.rowCount == 0){
@@ -78,7 +80,9 @@ app.get("/api", async (req, res) => {
 			}
 		}
 		else{//do regular statements without zip
+			console.log("In the else");
 			if (req.query.q == "movies" || req.query.q == "Movies"){
+				console.log("in if of movies where zip defined");
 				const template = "SELECT movie, theater, address, city, zip FROM movies WHERE zip = $1";
 				const response = await pool.query(template, [zipCode]);
 				res.json({type: 'movies', results: response.rows});

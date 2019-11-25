@@ -28,7 +28,7 @@ class Home extends React.Component {
       console.log(loggedInUser.username);
       jsCookie.set("username", loggedInUser.username);
       jsCookie.set("zip", loggedInUser.zip);
-      Router.replace("/search");
+      Router.replace("/Search");
     }
     this.setState({loggedInUser});
   }

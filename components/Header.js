@@ -13,21 +13,21 @@ const Header = () => (
       <a style={linkStyle}>Home</a>
     </Link>
     
-    <Link href="/search">
+    <Link href="/Search">
       <a style={linkStyle}>Search</a>
     </Link>
 
     {jsCookie.get("username") ?
-    <Link href="/logout">
+    <Link href="/Logout">
       <a style={linkStyle}>Logout</a>
     </Link>
     :
-    <Link href="/login">
+    <Link href="/Login">
       <a style={linkStyle}>Login</a>
     </Link>}
     {jsCookie.get("username")}
 
-    <Link href="/register">
+    <Link href="/Register">
       <a style={linkStyle}>Register</a>
     </Link>
   

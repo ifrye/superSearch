@@ -11,7 +11,7 @@ class Logout extends React.Component {
 	}
 
 	componentDidMount(){
-		Router.replace("/search");
+		Router.replace("/Search");
 	}
 	render() {
 		const that = this;
